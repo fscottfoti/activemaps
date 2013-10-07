@@ -45,8 +45,8 @@ d3.csv("minibats.csv", function(d) {
       mode:  +d.MODE,
       age:   +d.AGE,
       hour:  +d.ARR_HR,
-      lon:   +d.XCORD,
-      lat:   +d.YCORD,
+      lon:   projection([+d.XCORD, +d.YCORD])[0],
+      lat:   projection([+d.XCORD, +d.YCORD])[1],
     };
   }, function(error, rows) {
 
@@ -67,18 +67,11 @@ d3.csv("minibats.csv", function(d) {
     .data(data,keyf)
     .enter()
     .append("circle")
-    .attr("cx", function(d) {
-        d = d['first'];
-        return projection([d.lon, d.lat])[0];
-      })
-    .attr("cy", function(d) {
-        d = d['first'];
-        return projection([d.lon,d.lat])[1];
-      })
+    .attr("cx", function(d) { return d['first'].lon })
+    .attr("cy", function(d) { return d['first'].lat })
     .attr("r", function(d) { return d['first'].age/10; })
-    .style("fill", function(d) { 
-      return modecolor(d['first'].mode); })
-    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return .05;});
+    .style("fill", function(d) { return modecolor(d['first'].mode); })
+    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return 0;});
 });
 
 function keyf(d) { return d['key']; }
@@ -90,20 +83,12 @@ function redraw(mouse) {
   svg.selectAll("circle")
     .data(data.filter(function(d){return hour in d}),keyf)
     .transition().duration(2000)
-    .attr("cx", function(d) {
-        d = d[hour];
-        return projection([d.lon, d.lat])[0];
-      })
-    .attr("cy", function(d) {
-        d = d[hour];
-        return projection([d.lon,d.lat])[1];
-      })
+    .attr("cx", function(d) { return d[hour].lon })
+    .attr("cy", function(d) { return d[hour].lat })
     .attr("r", function(d) { return d['first'].age/10; })
-    .style("fill", function(d) { 
-      return modecolor(d[hour].mode); });
+    .style("fill", function(d) { return modecolor(d[hour].mode); });
   svg.selectAll("circle")
     .data(data)
-    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return .05;});
-  
+    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return 0;});
 }
 </script>
