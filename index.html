@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta charset="utf-8">
+<title>CHTS Map</title>
+
+<body>
+<div id=metainfo style="text-align: center; font-size: 32px; font-family: Arial;">Hour 00, Income 10</div>
+<script src="js/d3.v3.min.js"></script>
+<script type="text/javascript">
+  
+var width  = 1280,
+    height = 800;
+
+var catcolor = d3.scale.category20c();
+
+var interp = d3.interpolate("blue","red");
+var inccolor = function(d) {
+  return interp(d/10);
+}
+
+var modecolor = function(d) {
+  if (d == 3) return "red";      // walk
+  if (d == 2) return "orange";  // bike
+  if (d == 1) return "yellow"; // transit
+  if (d == 4) return "green"; // other
+  if (d == 5) return "blue"; // car
+} 
+
+var projection = d3.geo.mercator()
+  .center([-122.4191, 37.7792 ])
+  .scale(200000);
+  //.center([-122.2801, 37.8202 ])
+  //.scale(100000);
+
+var data = {};
+var svg;
+
+d3.csv("minibats.csv", function(d) {
+    return {
+      hhid:  +d.SAMPN,
+      perno: +d.PERNO,
+      inc:   +d.INCOM,
+      plano: +d.PLANO,
+      purp:  +d.APURP1,
+      mode:  +d.MODE,
+      age:   +d.AGE,
+      hour:  +d.ARR_HR,
+      lon:   +d.XCORD,
+      lat:   +d.YCORD,
+    };
+  }, function(error, rows) {
+
+  rows.forEach(function(r) {
+    var key = [r.hhid,r.perno];
+    if(!(key in data)) data[key] = {'key': key, 'first': r};
+    data[key][r.hour] = r;
+  });
+  data = Object.keys(data).map(function(key){return data[key];});
+
+  svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .on("mousemove", function() { redraw(d3.mouse(this)); });
+
+  var income = 10;
+  svg.selectAll("circle")
+    .data(data,keyf)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) {
+        d = d['first'];
+        return projection([d.lon, d.lat])[0];
+      })
+    .attr("cy", function(d) {
+        d = d['first'];
+        return projection([d.lon,d.lat])[1];
+      })
+    .attr("r", function(d) { return d['first'].age/10; })
+    .style("fill", function(d) { 
+      return modecolor(d['first'].mode); })
+    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return .05;});
+});
+
+function keyf(d) { return d['key']; }
+
+function redraw(mouse) {
+  var hour = Math.floor(mouse[0]/width*24) + 1;
+  var income = 10 - Math.floor(mouse[1]/height*10);
+  d3.select("#metainfo").text("Hour "+(hour<10?"0":"")+hour+", Income "+income);
+  svg.selectAll("circle")
+    .data(data.filter(function(d){return hour in d}),keyf)
+    .transition().duration(2000)
+    .attr("cx", function(d) {
+        d = d[hour];
+        return projection([d.lon, d.lat])[0];
+      })
+    .attr("cy", function(d) {
+        d = d[hour];
+        return projection([d.lon,d.lat])[1];
+      })
+    .attr("r", function(d) { return d['first'].age/10; })
+    .style("fill", function(d) { 
+      return modecolor(d[hour].mode); });
+  svg.selectAll("circle")
+    .data(data)
+    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return .05;});
+  
+}
+</script>
