@@ -1,4 +1,4 @@
 batsmaps
 ========
 
-Animated maps of the Bat Area in the California Household Travel Survey
+Animated maps of the BatyArea in the California Household Travel Survey
