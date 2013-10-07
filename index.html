@@ -2,21 +2,30 @@
 <head>
 <meta charset="utf-8">
 <title>CHTS Map</title>
-
+<style>
+html { height: 100%; }
+body { background-color: grey; height: 100%; margin: 0; padding: 0;}
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+.boundary {
+  fill: none;
+  stroke: #FFF;
+  stroke-width: .5px;
+}
+</style>
 <body>
-<div id=metainfo style="text-align: center; font-size: 32px; font-family: Arial;">Hour 00, Income 10</div>
+<div id=metainfo style="user-select: none; position: absolute; left: 350px; background-color: grey; color: white; font-size: 32px; font-family: Arial;">
+Hour 00, Income 05
+</div>
+
 <script src="js/d3.v3.min.js"></script>
+<script src="js/topojson.v1.min.js"></script>
 <script type="text/javascript">
   
-var width  = 1280,
-    height = 800;
-
-var catcolor = d3.scale.category20c();
-
-var interp = d3.interpolate("blue","red");
-var inccolor = function(d) {
-  return interp(d/10);
-}
+var width  = 1440,
+    height = 900;
 
 var modecolor = function(d) {
   if (d == 3) return "red";      // walk
@@ -28,18 +37,56 @@ var modecolor = function(d) {
 
 var projection = d3.geo.mercator()
   .center([-122.4191, 37.7792 ])
-  .scale(200000);
-  //.center([-122.2801, 37.8202 ])
-  //.scale(100000);
+  .scale(100000);
+
+var scale = 1.0;
+
+var zoom = d3.behavior.zoom()
+  .scaleExtent([1,8])
+  .on("zoom", move);
+
+function move() {
+  var t = d3.event.translate,
+  s = d3.event.scale;
+  scale = s;
+  t[0] = Math.min(width / 2 * (s - 1), Math.max(width / 2 * (1 - s), t[0]));
+  t[1] = Math.min(height / 2 * (s - 1) + 230 * s, Math.max(height / 2 * (1 - s) - 230 * s, t[1]));
+  zoom.translate(t);
+  g.style("stroke-width", 1 / s).attr("transform", "translate(" + t + ")scale(" + s + ")");
+  redraw(d3.mouse(this));
+}
+
+svg = d3.select("body").append("svg")
+  .attr("width", width)
+  .attr("height", height)
+  .on("mousemove", function() { redraw(d3.mouse(this)); })
+  .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+  .append("g")
+  .call(zoom);
+
+var g = svg.append("g");
+
+svg.append("rect")
+  .attr("class", "overlay")
+  .attr("x", -width / 2)
+  .attr("y", -height / 2)
+  .attr("width", width)
+  .attr("height", height);
+
+d3.json("counties.json", function(error, d) {
+  g.append("path")
+    .datum(topojson.mesh(d, d.objects.counties))
+    .attr("d", d3.geo.path().projection(projection))
+    .attr("class", "boundary");    
+});
 
 var data = {};
-var svg;
 
 d3.csv("minibats.csv", function(d) {
     return {
       hhid:  +d.SAMPN,
       perno: +d.PERNO,
-      inc:   +d.INCOM,
+      inc:   +Math.ceil(d.INCOM/2),
       plano: +d.PLANO,
       purp:  +d.APURP1,
       mode:  +d.MODE,
@@ -57,19 +104,14 @@ d3.csv("minibats.csv", function(d) {
   });
   data = Object.keys(data).map(function(key){return data[key];});
 
-  svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .on("mousemove", function() { redraw(d3.mouse(this)); });
-
-  var income = 10;
-  svg.selectAll("circle")
+  var income = 5;
+  g.selectAll("circle")
     .data(data,keyf)
     .enter()
     .append("circle")
     .attr("cx", function(d) { return d['first'].lon })
     .attr("cy", function(d) { return d['first'].lat })
-    .attr("r", function(d) { return d['first'].age/10; })
+    .attr("r", function(d) { return d['first'].age/15/scale; })
     .style("fill", function(d) { return modecolor(d['first'].mode); })
     .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return 0;});
 });
@@ -78,17 +120,17 @@ function keyf(d) { return d['key']; }
 
 function redraw(mouse) {
   var hour = Math.floor(mouse[0]/width*24) + 1;
-  var income = 10 - Math.floor(mouse[1]/height*10);
+  var income = 5 - Math.floor(mouse[1]/height*5);
   d3.select("#metainfo").text("Hour "+(hour<10?"0":"")+hour+", Income "+(income<10?"0":"")+income);
-  svg.selectAll("circle")
+  g.selectAll("circle")
     .data(data.filter(function(d){return hour in d}),keyf)
+    .style("fill", function(d) { return modecolor(d[hour].mode); })
     .transition().duration(2000)
     .attr("cx", function(d) { return d[hour].lon })
-    .attr("cy", function(d) { return d[hour].lat })
-    .attr("r", function(d) { return d['first'].age/10; })
-    .style("fill", function(d) { return modecolor(d[hour].mode); });
-  svg.selectAll("circle")
+    .attr("cy", function(d) { return d[hour].lat });
+  g.selectAll("circle")
     .data(data)
+    .attr("r", function(d) { return d['first'].age/15/scale; })
     .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return 0;});
 }
 </script>
