@@ -86,7 +86,7 @@ function keyf(d) { return d['key']; }
 function redraw(mouse) {
   var hour = Math.floor(mouse[0]/width*24) + 1;
   var income = 10 - Math.floor(mouse[1]/height*10);
-  d3.select("#metainfo").text("Hour "+(hour<10?"0":"")+hour+", Income "+income);
+  d3.select("#metainfo").text("Hour "+(hour<10?"0":"")+hour+", Income "+(income<10?"0":"")+income);
   svg.selectAll("circle")
     .data(data.filter(function(d){return hour in d}),keyf)
     .transition().duration(2000)
