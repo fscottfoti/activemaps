@@ -13,19 +13,34 @@ body {height: 100%; margin: 0; padding: 0;}
 <script type="text/javascript" src="js/tile.stamen.js"></script>
 <script src="js/d3.v3.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
+<link rel="stylesheet" href="js/jquery-ui.css" />
+<script src="js/jquery-1.9.1.js"></script>
+<script src="js/jquery-ui.js"></script>
 <body>
 <div id="map" style="width:100%; height:100%; position:fixed; left:0; top:0; overflow:hidden;"></div>
-<div id=metainfo unselectable="on" class="unselectable" style="border-width: thick; border-color: black; border-style: solid; position: absolute; left: 10px; bottom: 10px; background-color: black; color: white; font-size: 24px; font-family: Arial;">
-Hour 00, Income 00
+<div id=metainfo unselectable="on" class="unselectable" style="border-width: thick; border-color: #D9D9D9; border-style: solid; position: absolute; left: 5px; top: 325px; background-color: #D9D9D9; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888;">
+00:00
+</div>
+<div id="slider" style="position: absolute; top: 75px; left: 15px; height:240px;">
 </div>
 <script type="text/javascript">
+  
+$(function() {
+  $( "#slider" ).slider({
+    orientation: "vertical",
+    min: 1,
+    max: 24,
+    step: 1,
+    slide: function( event, ui ) { redraw(ui.value); }
+  });
+});
 
 var basezoom = 10;
 var map = new L.Map("map", {center: [37.7792, -122.4191], zoom: basezoom});
-var layer = new L.StamenTileLayer("toner-background");
+var layer = new L.StamenTileLayer("toner-lite");
 map.addLayer(layer);
-//L.tileLayer("http://{s}.tiles.mapbox.com/v3/examples.map-b70jh5xu/{z}/{x}/{y}.png",
-//    {subdomains: 'a',type:'map',minZoom:10,maxZoom:18}).addTo(map);
+// legend, incomes, dollar ranges for income
+
 
 var modecolor = function(d) {
   if (d == 3) return "red";      // walk
@@ -44,7 +59,7 @@ function project(x) {
 var scale = 1.0;
 
 var svg = d3.select(map.getPanes().overlayPane).append("svg")
-  .on("mousemove", function() { redraw(d3.mouse(this)); });
+;//  .on("mousemove", function() { redraw(d3.mouse(this)); });
 
 var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
@@ -89,7 +104,7 @@ d3.csv("minibats"+income+".csv", function(d) {
     .attr("cx", function(d) { return d['first'].plon; })
     .attr("cy", function(d) { return d['first'].plat; })
     .attr("r", function(d) { return d['first'].age/20/Math.sqrt(scale); })
-    .style("fill", function(d) { return modecolor(d['first'].mode); })
+    .style("fill", function(d) { return modecolor(6); })
     .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return 0;});
   
 });
@@ -113,24 +128,10 @@ function rezoom() {
     .attr("r", function(d) { return d['first'].age/20/Math.sqrt(scale); });
 }
 
-function redraw(mouse) {
+function redraw(hour) {
   var bottomLeft = project(bounds[0]),
       topRight = project(bounds[1]);
-  var hour = Math.floor((mouse[0]+bottomLeft[0])/map.getSize().x*24) + 1;
-  //var income = Math.floor((mouse[1]+topRight[1])/map.getSize().y*5) + 1;
-  //income = 6 - income;
-  d3.select("#metainfo").text("Hour "+(hour<10?"0":"")+hour+", Income "+(income<10?"0":"")+income);
-  /*g.selectAll("circle")
-    .data(data.filter(function(d){return hour in d}),keyf)
-    .style("fill", function(d) { return modecolor(d[hour].mode); })
-    .transition().duration(2000)
-    .attr("cx", function(d) { return d[hour].plon; })
-    .attr("cy", function(d) { return d[hour].plat; });
-  g.selectAll("circle")
-    .data(data)
-    .attr("r", function(d) { return d['first'].age/20/Math.sqrt(scale); })
-    .attr('opacity', function(d) {if(d['first'].inc==income) return 1.0; else return 0;});
-  */
+  d3.select("#metainfo").text((hour<10?"0":"")+hour+":00");
   function mostrecent(d,hour) {
     for(;hour>0;hour--) {
       if(hour in d) return d[hour];
