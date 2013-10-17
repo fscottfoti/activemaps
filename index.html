@@ -101,7 +101,7 @@ $(function() {
   });
 });
 
-// google analytics, help page, github docs, all incomes+sample, la
+// google analytics, github docs, la
 var basezoom = 12;
 var map = new L.Map("map", {center: [37.7792, -122.3391], zoom: basezoom});
 var layer = new L.StamenTileLayer("toner-background");
@@ -176,7 +176,7 @@ function readcsv(income) {
     .data(data,keyf)
     .enter()
     .append("circle")
-    .attr("r", function(d) { return d['first'].age/20/Math.sqrt(scale); })
+    .attr("r", function(d) { return d['first'].age/15/Math.sqrt(scale); })
     .style("fill", function(d) { return modecolor(mostrecent(d,hour).mode); })
     .attr("cx", function(d) { return mostrecent(d,hour).plon; })
     .attr("cy", function(d) { return mostrecent(d,hour).plat; });
@@ -204,14 +204,14 @@ function rezoom() {
   g.attr("transform", "scale("+scale+")");
   g.selectAll("circle")
     .data(data)
-    .attr("r", function(d) { return d['first'].age/20/Math.sqrt(scale); });
+    .attr("r", function(d) { return d['first'].age/15/Math.sqrt(scale); });
 }
   
 function redraw(hour) {
   d3.select("#metainfo").text((hour<10?"0":"")+hour+":00");
   g.selectAll("circle")
     .data(data)
-    .attr("r", function(d) { return d['first'].age/20/Math.sqrt(scale); })
+    .attr("r", function(d) { return d['first'].age/15/Math.sqrt(scale); })
     .style("fill", function(d) { return modecolor(mostrecent(d,hour).mode); })
     .transition().duration(2000)
     .attr("cx", function(d) { return mostrecent(d,hour).plon; })
