@@ -46,15 +46,15 @@ body {height: 100%; margin: 0; padding: 0;}
 <div id=metainfo unselectable="on" class="unselectable" style="border-width: thin; border-color: #D9D9D9; border-style: solid; position: absolute; left: 45px; top: 10px; background-color: #D9D9D9; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888; border-radius: 4px;">01:00</div>
 <div id="slider" style="position: absolute; top: 17px; left: 120px; width:240px;"></div>
 <div id="legend" class="info legend" style="position: absolute; top: 10px; right: 10px;"></div>
-<div id="incomechooser" style="position:absolute; left: 45px; top: 38px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
+<div id="incomechooser" style="position:absolute; left: 45px; top: 45px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
 Household Income:<br>
 <select style="width: 100px;">
     <option value=1>up to 10k</option>
     <option value=2>10k to 25k</option>
-    <option value=3 selected>25k to 35k</option>
+    <option value=3>25k to 35k</option>
     <option value=4>35k to 50k</option>
     <option value=5>50k to 75k</option>
-    <option value=6>75k to 100k</option>
+    <option value=6 selected>75k to 100k</option>
     <option value=7>100k to 150k</option>
     <option value=8>150k to 200k</option>
     <option value=9>200k to 250k</option>
@@ -71,7 +71,7 @@ Household Income:<br>
             <p>Each circle represents a person and is sized relative to the age of the person.  Look closely and you can see a parent (large circle) traveling with a child (small circle).
             <p>Circles are colored by the last transportation mode taken by each person (see legend).  The "home" mode is used for people who haven't left home and do not have a mode yet.  Notice that mode colors will be inaccurate when moving the slider *backwards* in time.</p>
             <p><i>The speed of each trip is not accounted for when moving the circles - each animation takes the same amount of time no matter the duration of the trip.</i></p>
-            <p>Many thanks to <a href="http://www.synthicity.com">Synthicity</a> for supporting my work on this project and for the <a href=http://vudlab.com/#/">vudlab</a> for inspiring me try this.<br><br>Email me - Fletcher Foti - at ffoti @ berkeley.edu or help me make this project better on <a href="https://github.com/fscottfoti/batsmaps">github</a>.
+            <p>Many thanks to <a href="http://www.synthicity.com">Synthicity</a> for supporting my work on this project and for the <a href=http://vudlab.com/#/">vudlab</a> for inspiring me to try this.<br><br>Email me - Fletcher Foti - at ffoti @ berkeley.edu or help me make this project better on <a href="https://github.com/fscottfoti/batsmaps">github</a>.
             <p><a href="#" onclick="$.colorbox.close();" color=black>Close</a></p>
             </div>
         </div>
@@ -102,9 +102,9 @@ $(function() {
 });
 
 // google analytics, help page, github docs, all incomes+sample, la
-var basezoom = 10;
-var map = new L.Map("map", {center: [37.5792, -122.2691], zoom: basezoom});
-var layer = new L.StamenTileLayer("toner-lite");
+var basezoom = 12;
+var map = new L.Map("map", {center: [37.7792, -122.3391], zoom: basezoom});
+var layer = new L.StamenTileLayer("toner-background");
 map.addLayer(layer);
 
 var modes = ["Transit","Bike","Walk","Other","Car","Home"];
@@ -128,7 +128,7 @@ var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 var data = {};
 var bounds;
-var income = 3;
+var income = 6;
   
 bounds = [[-123.2,39.184],[-121.166,37.064]];
 projbounds = [project(bounds[0]),project(bounds[1])] 
