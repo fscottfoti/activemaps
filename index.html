@@ -37,8 +37,10 @@ body {height: 100%; margin: 0; padding: 0;}
 <script src="js/d3.v3.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
 <link rel="stylesheet" href="js/jquery-ui.css" />
+<link rel="stylesheet" href="js/colorbox.css" />
 <script src="js/jquery-1.9.1.js"></script>
 <script src="js/jquery-ui.js"></script>
+<script src="js/jquery.colorbox.js"></script>
 <body>
 <div id="map" style="width:100%; height:100%; position:fixed; left:0; top:0; overflow:hidden;"></div>
 <div id=metainfo unselectable="on" class="unselectable" style="border-width: thin; border-color: #D9D9D9; border-style: solid; position: absolute; left: 45px; top: 10px; background-color: #D9D9D9; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888; border-radius: 4px;">01:00</div>
@@ -59,9 +61,26 @@ Household Income:<br>
     <option value=10>250k and up</option>
 </select>
 </div>
+<div>
+<p><a class='inline' style="position:absolute; left: 11px; top: 70px;" href="#inline_content"><img height=23px  src="qmark.ico"/></a></p>
+</div>
+        <div style='display:none'>
+            <div id='inline_content' style='padding:10px; background:#fff;'>
+            <p><strong>This page visualizes the travel diaries for the 10,000 households that participated in the 2010 California Household Travel Survey in the Bay Area Region.</strong></p>
+            <p>You can advance the time of day by dragging the time slider from left to right and change the range of household incomes that are displayed using the drop down box.  Locations are accurate within a few hundred meters to protect the identities of the survey-taker.</p>
+            <p>Each circle represents a person and is sized relative to the age of the person.  Look closely and you can see a parent (large circle) traveling with a child (small circle).
+            <p>Circles are colored by the last transportation mode taken by each person (see legend).  The "home" mode is used for people who haven't left home and do not have a mode yet.  Notice that mode colors will be inaccurate when moving the slider *backwards* in time.</p>
+            <p><i>The speed of each trip is not accounted for when moving the circles - each animation takes the same amount of time no matter the duration of the trip.</i></p>
+            <p>Many thanks to <a href="http://www.synthicity.com">Synthicity</a> for supporting my work on this project and for the <a href=http://vudlab.com/#/">vudlab</a> for inspiring me try this.<br><br>Email me - Fletcher Foti - at ffoti @ berkeley.edu or help me make this project better on <a href="https://github.com/fscottfoti/batsmaps">github</a>.
+            <p><a href="#" onclick="$.colorbox.close();" color=black>Close</a></p>
+            </div>
+        </div>
+</pre>
 <script type="text/javascript">
-  
+
 $(function() {
+  $(".inline").colorbox({inline:true, width:"50%", opacity: .6});
+
   var labels = [];
   for (var i = 0; i < modes.length; i++) {
     labels.push('<i style="background:' + modecolor(i+1) + '"></i>' +modes[i]);
