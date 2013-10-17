@@ -41,10 +41,10 @@ body {height: 100%; margin: 0; padding: 0;}
 <script src="js/jquery-ui.js"></script>
 <body>
 <div id="map" style="width:100%; height:100%; position:fixed; left:0; top:0; overflow:hidden;"></div>
-<div id=metainfo unselectable="on" class="unselectable" style="border-width: thin; border-color: #D9D9D9; border-style: solid; position: absolute; left: 10px; top: 335px; background-color: #D9D9D9; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888; border-radius: 4px;">00:00</div>
-<div id="slider" style="position: absolute; top: 80px; left: 15px; height:240px;"></div>
-<div id="legend" class="info legend" style="position: absolute; bottom: 25px; right: 10px;"></div>
-<div id="incomechooser" style="position:absolute; left: 10px; top: 370px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
+<div id=metainfo unselectable="on" class="unselectable" style="border-width: thin; border-color: #D9D9D9; border-style: solid; position: absolute; left: 45px; top: 10px; background-color: #D9D9D9; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888; border-radius: 4px;">01:00</div>
+<div id="slider" style="position: absolute; top: 17px; left: 120px; width:240px;"></div>
+<div id="legend" class="info legend" style="position: absolute; top: 10px; right: 10px;"></div>
+<div id="incomechooser" style="position:absolute; left: 45px; top: 38px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
 Household Income:<br>
 <select style="width: 100px;">
     <option value=1>up to 10k</option>
@@ -70,7 +70,6 @@ $(function() {
   $("#legend").html(legend);
 
   $( "#slider" ).slider({
-    orientation: "vertical",
     min: 1,
     max: 24,
     step: 1,
@@ -83,12 +82,13 @@ $(function() {
   });
 });
 
+// analytics, move to amazon, help page, la, horizontal time slider
 var basezoom = 10;
-var map = new L.Map("map", {center: [37.7792, -122.4191], zoom: basezoom});
+var map = new L.Map("map", {center: [37.5792, -122.2691], zoom: basezoom});
 var layer = new L.StamenTileLayer("toner-lite");
 map.addLayer(layer);
 
-var modes = ["Walk","Bike","Transit","Other","Car","Home"];
+var modes = ["Transit","Bike","Walk","Other","Car","Home"];
 var modecolor = function(d) {
   if (d == 3) return "red";      // walk
   if (d == 2) return "orange";  // bike
@@ -99,24 +99,20 @@ var modecolor = function(d) {
 } 
 
 function project(x) {
-  //var point = map.latLngToLayerPoint(new L.LatLng(x[1], x[0]));
   var point = map.project(new L.LatLng(x[1], x[0]),basezoom);
   return [point.x, point.y];
 }
 
 var scale = 1.0;
-
 var svg = d3.select(map.getPanes().overlayPane).append("svg")
-
 var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 var data = {};
 var bounds;
 var income = 3;
   
-//bounds = [[-122.9,37.164],[-121.566,38.2184]];
-bounds = [[-122.9,38.2184],[-121.566,37.164]];
-projbounds = [project(bounds[0]),projects(bounds[1])] 
+bounds = [[-123.2,39.184],[-121.166,37.064]];
+projbounds = [project(bounds[0]),project(bounds[1])] 
 map.on("viewreset", rezoom);
   
 function mostrecent(d,hour) {
@@ -154,6 +150,7 @@ function readcsv(income) {
     data[key][r.hour] = r;
   });
   data = Object.keys(data).map(function(key){return data[key];});
+  rezoom();
 
   hour = $("#slider").slider('value');
   g.selectAll("circle")
@@ -165,7 +162,6 @@ function readcsv(income) {
     .attr("cx", function(d) { return mostrecent(d,hour).plon; })
     .attr("cy", function(d) { return mostrecent(d,hour).plat; });
   });
-  rezoom();
 }
 readcsv(income);
 
@@ -174,14 +170,18 @@ function keyf(d) { return d['key']; }
 function rezoom() {
   var topLeft = project(bounds[0]),
       bottomRight = project(bounds[1]);
+  var width = bottomRight[0] - topLeft[0],
+      height = bottomRight[1] - topLeft[1];
+  var point = map.latLngToLayerPoint(new L.LatLng(bounds[0][1], bounds[0][0]));
 
-  svg.attr("width", (topRight[0] - bottomLeft[0]))
-     .attr("height", (topRight[1] - topRight[1]))
-     .style("margin-left", bottomLeft[0] + "px")
-     .style("margin-top", topRight[1] + "px");
-
-  g.attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
   scale = Math.pow(2,map.getZoom() - basezoom);
+  svg.attr("width", width*scale)
+     .attr("height", height*scale)
+     .style("margin-left", point.x + "px")
+     .style("margin-top", point.y + "px");
+
+  var s = "translate(" + -point.x + "," + -point.y + ")";
+  g.attr("transform",s); 
   g.attr("transform", "scale("+scale+")");
   g.selectAll("circle")
     .data(data)
