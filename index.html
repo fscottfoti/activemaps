@@ -101,7 +101,8 @@ $(function() {
   });
 });
 
-// google analytics, github docs, la
+// google analytics, github docs, other regions, add noise
+var region = "bayarea"; 
 var basezoom = 12;
 var map = new L.Map("map", {center: [37.7792, -122.3391], zoom: basezoom});
 var layer = new L.StamenTileLayer("toner-background");
@@ -147,7 +148,7 @@ function readcsv(income) {
   g.selectAll("circle").data([]).exit().remove(); // remove old circles
   data = {};  
 
-  d3.csv("sandiego/minibats"+income+".csv", function(d) {
+  d3.csv(region+"/minibats"+income+".csv", function(d) {
     return {
       hhid:  +d.HHID,
       perid: +d.PERID,
