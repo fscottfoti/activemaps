@@ -101,8 +101,12 @@ $(function() {
   });
 });
 
-// google analytics, github docs, other regions, add noise
-var region = "bayarea"; 
+// google analytics, github docs, other regions
+if(document.URL.indexOf('?') == -1) var region = "bayarea";
+else var region = document.URL.substring(document.URL.indexOf('?')+1);
+if($.inArray(region,["sandiego","bayarea","monterey","bakersfield","losangeles","fresno"])==-1)
+  alert("Region must be one of sandiego, bayarea, monterey, bakersfield, losangeles, fresno");
+
 var basezoom = 12;
 var map = new L.Map("map", {center: [37.7792, -122.3391], zoom: basezoom});
 var layer = new L.StamenTileLayer("toner-background");
