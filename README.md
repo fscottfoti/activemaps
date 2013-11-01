@@ -1,7 +1,7 @@
-batsmaps
+activemaps
 ========
 
-This is a repo that uses D3 and leaflet to animate travel surveys, in this case the new California Household Travel Survey.  **Unfortunately, at this point I'm still wrestling with the privacy policy so I can't share it as a functional website.**  Nonetheless, the code works fully and I'm looking for another travel survey or similar data with lat-long data over time that I can use with this (at the moment I'm thinking about using the New York travel survey for this purpose).
+This is a repo that uses D3 and leaflet to animate travel surveys, now for the NYMTC Travel Survey and the new California Household Travel Survey.
 
 ![sandiego](https://raw.github.com/fscottfoti/batsmaps/master/images/sandiego.jpg)
 
@@ -14,9 +14,9 @@ The survey is visualized in the following way:
 
 ![bayarea](https://raw.github.com/fscottfoti/batsmaps/master/images/bayarea.jpg)
 
-I can share the CHTS data if you already have access to the survey and you can see an actual webpage, but **I strongly encourage setting up a new region for the region you live in and the data you're interested in**.
+**I strongly encourage setting up a new region for the region you live in and the data you're interested in**.
 
-The data format used by batsmaps is extremely simple and an example few records is shown below.  Simply include household id, person id, age, mode of trip, the arrival hour and the longitude-latitude for the location.  Use the correct field names and batsmaps will use it automatically or email if you have trouble.  
+The data format used by activemaps is extremely simple and an example few records is shown below.  Simply include household id, person id, age, mode of trip, the arrival hour and the longitude-latitude for the location.  Use the correct field names and batsmaps will use it automatically or email if you have trouble.  
 
 ```
 HHID,PERID,AGE,MODE,ARR_HR,XCORD,YCORD
