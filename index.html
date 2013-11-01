@@ -2,7 +2,7 @@
 <head>
 <meta charset="utf-8">
 <link rel="icon" href="bat.ico" type="image/x-icon">
-<title>ACTIVEMAPS</title>
+<title>ActiveMaps</title>
 <style>
 .legend {
   line-height: 18px;
@@ -58,14 +58,15 @@ body {height: 100%; margin: 0; padding: 0;}
 <div id="regionchooser" style="position:absolute; left: 45px; top: 45px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
 Region:<br>
 <select style="width: 100px;">
+    <option value=newyork>New York</option>
     <option value=bayarea>Bay Area</option>
     <option value=losangeles>Los Angeles</option>
-    <option value=sandiego>San Diego</option>
+<!--    <option value=sandiego>San Diego</option>
     <option value=sacramento>Sacramento</option>
     <option value=bakersfield>Bakersfield</option>
     <option value=fresno>Fresno</option>
     <option value=monterey>Monterey</option>
-    <option value=newyork>New York</option>
+-->
 </select>
 </div>
 <div id="incomechooser" style="position:absolute; left: 155px; top: 45px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
@@ -131,10 +132,10 @@ $(function() {
 });
 
 // google analytics, github docs
-if(document.URL.indexOf('?') == -1) var region = "bayarea";
+if(document.URL.indexOf('?') == -1) var region = "newyork";
 else var region = document.URL.substring(document.URL.indexOf('?')+1);
-if($.inArray(region,["sandiego","bayarea","monterey","sacramento","bakersfield","losangeles","fresno"])==-1)
-  alert("Region must be one of sandiego, bayarea, monterey, sacramento, bakersfield, losangeles, fresno");
+if($.inArray(region,["sandiego","newyork","bayarea","monterey","sacramento","bakersfield","losangeles","fresno"])==-1)
+  alert("Region must be one of newyork, sandiego, bayarea, monterey, sacramento, bakersfield, losangeles, fresno");
 var centerd = {"sandiego": [32.73,-117.07], "monterey": [36.78,-121.85], "sacramento": [38.57,-121.5], "bakersfield": [35.33,-119.05], "fresno": [36.77,-119.72],"bayarea": [37.7792,-122.3391],"losangeles":[34.05,-118.24],"newyork":[40.78,-73.97]}
 var center = centerd[region]
 var basezoom = 12;
@@ -190,7 +191,10 @@ function readcsv(region,income) {
   g.selectAll("circle").data([]).exit().remove(); // remove old circles
   data = {};  
 
-  d3.csv("batsdata/"+region+"/minibats"+income+".csv", function(d) {
+  var fname;
+  if(region == "newyork") fname = region+"/minibats"+income+".csv";
+  else fname = "batsdata/"+region+"/minibats"+income+".csv";
+  d3.csv(fname, function(d) {
     return {
       hhid:  +d.HHID,
       perid: +d.PERID,
