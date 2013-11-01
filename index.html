@@ -65,6 +65,7 @@ Region:<br>
     <option value=bakersfield>Bakersfield</option>
     <option value=fresno>Fresno</option>
     <option value=monterey>Monterey</option>
+    <option value=newyork>New York</option>
 </select>
 </div>
 <div id="incomechooser" style="position:absolute; left: 155px; top: 45px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
@@ -120,6 +121,7 @@ $(function() {
   $("#regionchooser").change(function(s) {
     region = $("#regionchooser").find(":selected").val();
     map.panTo(centerd[region]);
+    setbounds(region);
     readcsv(region,income);
   });
   $("#incomechooser").change(function(s) {
@@ -133,9 +135,9 @@ if(document.URL.indexOf('?') == -1) var region = "bayarea";
 else var region = document.URL.substring(document.URL.indexOf('?')+1);
 if($.inArray(region,["sandiego","bayarea","monterey","sacramento","bakersfield","losangeles","fresno"])==-1)
   alert("Region must be one of sandiego, bayarea, monterey, sacramento, bakersfield, losangeles, fresno");
-var centerd = {"sandiego": [32.73,-117.07], "monterey": [36.78,-121.85], "sacramento": [38.57,-121.5], "bakersfield": [35.33,-119.05], "fresno": [36.77,-119.72],"bayarea": [37.7792,-122.3391],"losangeles":[34.05,-118.24]}
+var centerd = {"sandiego": [32.73,-117.07], "monterey": [36.78,-121.85], "sacramento": [38.57,-121.5], "bakersfield": [35.33,-119.05], "fresno": [36.77,-119.72],"bayarea": [37.7792,-122.3391],"losangeles":[34.05,-118.24],"newyork":[40.78,-73.97]}
 var center = centerd[region]
-var basezoom = 11;
+var basezoom = 12;
 if(region == "monterey") basezoom = 10;
 
 var map = new L.Map("map", {center: center, zoom: basezoom});
@@ -162,12 +164,18 @@ var svg = d3.select(map.getPanes().overlayPane).append("svg")
 var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 var data = {};
-var bounds;
 var income = 6;
   
-//bounds = [[-123.2,39.184],[-121.166,37.064]];
-bounds = [[-124.475,42.223],[-114.604,32.04]];
-projbounds = [project(bounds[0]),project(bounds[1])] 
+var bounds, projbounds;
+var defbounds = [[-124.475,42.223],[-114.604,32.04]];
+var boundsd = {"newyork": [[-75.2,42.05],[-72.0,39.57]]}
+function setbounds(region) {
+  if(region in boundsd) bounds = boundsd[region];
+  else bounds = defbounds;
+  projbounds = [project(bounds[0]),project(bounds[1])] 
+}
+setbounds(region);
+
 map.on("viewreset", rezoom);
   
 function mostrecent(d,hour) {
@@ -198,7 +206,10 @@ function readcsv(region,income) {
 
   rows.forEach(function(r) {
     var key = [r.hhid,r.perid];
-    if(!(key in data)) data[key] = {'key': key, 'first': r};
+    if(!(key in data)) {
+      r.mode = 6;
+      data[key] = {'key': key, 'first': r};
+    }
     data[key][r.hour] = r;
   });
   data = Object.keys(data).map(function(key){return data[key];});
