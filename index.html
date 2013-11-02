@@ -120,6 +120,7 @@ $(function() {
   $("#regionchooser").change(function(s) {
     region = $("#regionchooser").find(":selected").val();
     map.panTo(centerd[region]);
+    map.setZoom(basezoom);
     setbounds(region);
     readcsv(region,income);
   });
