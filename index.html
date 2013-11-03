@@ -36,8 +36,8 @@ body {height: 100%; margin: 0; padding: 0;}
 <script type="text/javascript" src="js/tile.stamen.js"></script>
 <script src="js/d3.v3.min.js"></script>
 <script src="js/topojson.v1.min.js"></script>
-<link rel="stylesheet" href="js/jquery-ui.css" />
 <link rel="stylesheet" href="js/colorbox.css" />
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/ui-darkness/jquery-ui.css" />
 <script src="js/jquery-1.9.1.js"></script>
 <script src="js/jquery-ui.js"></script>
 <script src="js/jquery.colorbox.js"></script>
@@ -52,10 +52,10 @@ body {height: 100%; margin: 0; padding: 0;}
 </script>
 <body>
 <div id="map" style="width:100%; height:100%; position:fixed; left:0; top:0; overflow:hidden;"></div>
-<div id=metainfo unselectable="on" class="unselectable" style="border-width: thin; border-color: #D9D9D9; border-style: solid; position: absolute; left: 45px; top: 10px; background-color: #D9D9D9; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888; border-radius: 4px;">01:00</div>
+<div id=metainfo unselectable="on" class="unselectable" style="border-width: thin; border-color: #262626; border-style: solid; position: absolute; left: 45px; top: 10px; background-color: #262626; color: white; font-size: 24px; font-family: Arial; text-shadow: 2px 2px #888; border-radius: 4px;">01:00</div>
 <div id="slider" style="position: absolute; top: 17px; left: 120px; width:240px;"></div>
 <div id="legend" class="info legend" style="position: absolute; top: 10px; right: 10px;"></div>
-<div id="regionchooser" style="position:absolute; left: 45px; top: 45px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
+<div id="regionchooser" style="position:absolute; left: 45px; top: 45px; border-width: thin; border-color: #262626; border-style: solid; background-color: #262626; font-family: Arial; font-size: 14px; border-radius: 4px; color: white;">
 Region:<br>
 <select style="width: 100px;">
     <option value=newyork>New York</option>
@@ -69,9 +69,9 @@ Region:<br>
 -->
 </select>
 </div>
-<div id="incomechooser" style="position:absolute; left: 155px; top: 45px; border-width: thin; border-color: #D9D9D9; border-style: solid; background-color: #D9D9D9; font-family: Arial; font-size: 14px; border-radius: 4px;">
+<div id="incomechooser" style="position:absolute; left: 155px; top: 45px; border-width: thin; border-color: #262626; border-style: solid; background-color: #262626; font-family: Arial; font-size: 14px; border-radius: 4px; color: white;">
 Household Income:<br>
-<select style="width: 100px;">
+<select style="width: 110px;">
     <option value=1>up to 15k</option>
     <option value=2>15k to 30k</option>
     <option value=3>30k to 50k</option>
@@ -81,6 +81,12 @@ Household Income:<br>
     <option value=7>150k to 200k</option>
     <option value=8>200k and up</option>
 </select>
+</div>
+<div>
+<p><a style="position:absolute; left: 362px; top: 8px;" href="javascript:play();"><img height=33px  src="images/button_black_play.png"/></a></p>
+</div>
+<div>
+<p><a style="position:absolute; left: 392px; top: 8px;" href="javascript:stop();"><img height=33px  src="images/button_black_stop.png"/></a></p>
 </div>
 <div>
 <p><a class='inline' style="position:absolute; left: 11px; top: 70px;" href="#inline_content"><img height=23px  src="qmark.ico"/></a></p>
@@ -99,6 +105,26 @@ Household Income:<br>
         </div>
 </pre>
 <script type="text/javascript">
+var loopcnt = 0;
+function play() {
+  if(loopcnt > 0) return;
+  loopcnt = 19;
+  $("#slider").slider('value',25-loopcnt);
+  redraw(25-loopcnt);
+  loopcnt--;
+  (function myLoop () {          
+    setTimeout(function () {
+      if (loopcnt <= 0) return;      
+      $("#slider").slider('value',25-loopcnt);
+      redraw(25-loopcnt);
+      --loopcnt;
+      myLoop();
+   }, 2000)
+  })();
+}
+function stop() {
+  loopcnt = 0;
+}
 
 $(function() {
   $(".inline").colorbox({inline:true, width:"50%", opacity: .6});
