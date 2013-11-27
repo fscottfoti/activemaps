@@ -62,7 +62,8 @@ Region:<br>
     <option value=monterey>Monterey</option>
 </select>
 </div>
-<div id="modechart" style="position:absolute; top: 8px; right: 8px; height: 250px; width:250px; background-color: rgba(255,255,255,.7)"><svg></svg></div>
+<div id="modechart" style="position:absolute; top: 8px; right: 8px; height: 250px; width:250px; background-color: rgba(255,255,255,.85)"><svg></svg></div>
+<div id="agechart" style="position:absolute; top: 266px; right: 8px; height: 250px; width:250px; background-color: rgba(255,255,255,.85)"><svg></svg></div>
 <div id="incomechooser" style="position:absolute; left: 155px; top: 45px; border-width: thin; border-color: #262626; border-style: solid; background-color: #262626; font-family: Arial; font-size: 14px; border-radius: 4px; color: white;">
 Household Income:<br>
 <select style="width: 110px;">
@@ -216,12 +217,18 @@ function mostrecent(d,hour) {
   return d['first'];
 }
 
-var chart = nv.models.pieChart()
+var modechart = nv.models.pieChart()
   .x(function(d) { return d.label })
   .y(function(d) { return d.value })
   .color(function(d) { return modecolor(d.index+1) || modecolor(d.data.index+1);})
   .labelThreshold(.1)
   .showLabels(false);
+
+var agechart = nv.models.discreteBarChart()
+  .x(function(d) { return d.label })
+  .y(function(d) { return d.value })
+  .staggerLabels(true)
+  .transitionDuration(1000);
 
 function readcsv(region,income) {
   
@@ -259,10 +266,16 @@ function readcsv(region,income) {
  
   d3.select("#modechart svg")
     .datum(modecount(hour))
-    .transition().duration(2000)
-    .call(chart);
+    .transition().duration(1000)
+    .call(modechart);
+  
+  d3.select("#agechart svg")
+    .datum(agecount(hour))
+    .transition().duration(1000)
+    .call(agechart);
 
-  nv.addGraph(function () {return chart;});
+  nv.addGraph(function () {return modechart;});
+  nv.addGraph(function () {return agechart;});
 
   g.selectAll("circle")
     .data(data,keyf)
@@ -278,6 +291,27 @@ readcsv(region,income);
 
 function keyf(d) { return d['key']; }
   
+function agecount(hour) {
+  var spec = {};
+  var b = map.getBounds();
+  var maxages = [15,30,45,60,75,90];
+  for(i=0;i<maxages.length;i++) spec[i] = {"index": i, "label": maxages[i], "value": 0};
+  spec[2]["value"] += 1;
+  data.forEach(function(d) { 
+    var d = mostrecent(d,hour);
+    if(d.lat<=b._southWest.lat || d.lat>=b._northEast.lat) return;
+    if(d.lon<=b._southWest.lng || d.lon>=b._northEast.lng) return;
+    for(j=0;j<maxages.length-1;j++) {
+      if(d.age < maxages[j]) break;
+    }
+    spec[j]["value"] += 1; 
+  });
+
+  spec = Object.keys(spec).map(function(key){return spec[key];});
+  spec = [{key: "Agedist", values: spec}];
+  return spec;
+}
+
 function modecount(hour) {
   var spec = {};
   var b = map.getBounds();
@@ -320,7 +354,11 @@ function rechart() {
   d3.select("#modechart svg")
     .datum(modecount(hour))
     .transition().duration(1000)
-    .call(chart);
+    .call(modechart);
+  d3.select("#agechart svg")
+    .datum(agecount(hour))
+    .transition().duration(1000)
+    .call(agechart);
 }
  
 function redraw(hour) {
@@ -335,7 +373,11 @@ function redraw(hour) {
   d3.select("#modechart svg")
     .datum(modecount(hour))
     .transition().duration(1000)
-    .call(chart);
+    .call(modechart);
+  d3.select("#agechart svg")
+    .datum(agecount(hour))
+    .transition().duration(1000)
+    .call(agechart);
 }
 </script>
 </body>
