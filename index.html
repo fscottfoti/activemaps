@@ -53,6 +53,7 @@ body {height: 100%; margin: 0; padding: 0;}
 Region:<br>
 <select style="width: 100px;">
     <option value=newyork>New York</option>
+    <option value=mexicocity>Mexico City</option>
     <option value=bayarea>Bay Area</option>
     <option value=losangeles>Los Angeles</option>
     <option value=sandiego>San Diego</option>
@@ -63,7 +64,7 @@ Region:<br>
 </select>
 </div>
 <div id="modechart" style="position:absolute; top: 8px; right: 8px; height: 250px; width:250px; background-color: rgba(255,255,255,.85)"><svg></svg></div>
-<div id="agechart" style="position:absolute; top: 266px; right: 8px; height: 250px; width:250px; background-color: rgba(255,255,255,.85)"><svg></svg></div>
+<div id="agechart" style="display: none;position:absolute; top: 266px; right: 8px; height: 250px; width:250px; background-color: rgba(255,255,255,.85)"><svg></svg></div>
 <div id="incomechooser" style="position:absolute; left: 155px; top: 45px; border-width: thin; border-color: #262626; border-style: solid; background-color: #262626; font-family: Arial; font-size: 14px; border-radius: 4px; color: white;">
 Household Income:<br>
 <select style="width: 110px;">
@@ -71,8 +72,8 @@ Household Income:<br>
     <option value=2>15k to 30k</option>
     <option value=3>30k to 50k</option>
     <option value=4>50k to 75k</option>
-    <option value=5>75k to 100k</option>
-    <option value=6 selected>100k to 150k</option>
+    <option value=5 selected>75k to 100k</option>
+    <option value=6>100k to 150k</option>
     <option value=7>150k to 200k</option>
     <option value=8>200k and up</option>
 </select>
@@ -161,11 +162,19 @@ $(function() {
   });
 });
 
+segment = null;
 if(document.URL.indexOf('?') == -1) var region = "newyork";
-else var region = document.URL.substring(document.URL.indexOf('?')+1);
-if($.inArray(region,["sandiego","newyork","bayarea","monterey","sacramento","bakersfield","losangeles","fresno"])==-1)
-  alert("Region must be one of newyork, sandiego, bayarea, monterey, sacramento, bakersfield, losangeles, fresno");
-var centerd = {"sandiego": [32.73,-117.07], "monterey": [36.78,-121.85], "sacramento": [38.57,-121.5], "bakersfield": [35.33,-119.05], "fresno": [36.77,-119.72],"bayarea": [37.7792,-122.3391],"losangeles":[34.05,-118.24],"newyork":[40.78,-73.97]}
+else {
+  var region = document.URL.match(/region=([^&]+)/)[1];
+  $('#regionchooser option[value='+region+']').attr('selected', 'selected');;
+  var segment = document.URL.match(/segment=([^&]+)/);
+  if(segment) {
+    segment = segment[1];
+  }
+}
+if($.inArray(region,["sandiego","newyork","mexicocity","bayarea","monterey","sacramento","bakersfield","losangeles","fresno"])==-1)
+  alert("Region must be one of newyork, mexicocity, sandiego, bayarea, monterey, sacramento, bakersfield, losangeles, fresno");
+var centerd = {"sandiego": [32.73,-117.07], "monterey": [36.78,-121.85], "sacramento": [38.57,-121.5], "bakersfield": [35.33,-119.05], "fresno": [36.77,-119.72],"bayarea": [37.7792,-122.3391],"losangeles":[34.05,-118.24],"newyork":[40.78,-73.97],"mexicocity": [19.432,-99.133]}
 var center = centerd[region]
 var basezoom = 12;
 if(region == "monterey") basezoom = 10;
@@ -174,7 +183,7 @@ var map = new L.Map("map", {center: center, zoom: basezoom});
 var layer = new L.StamenTileLayer("toner-lite");
 map.addLayer(layer);
 
-var modes = ["Transit","Bike","Walk","Other","Car","Home"];
+var modes = ["Transit","Bike","Walk","Other","Car","Home","Collectivo","Collectivo+Transit","Taxi"];
 var modecolor = function(d) {
   if (d == 3) return "red";      // walk
   if (d == 2) return "orange";  // bike
@@ -182,6 +191,9 @@ var modecolor = function(d) {
   if (d == 4) return "green"; // other
   if (d == 5) return "blue"; // car
   if (d == 6) return "brown"; // home
+  if (d == 7) return "#AF7817";
+  if (d == 8) return "#EAC117";
+  if (d == 9) return "pink";
 } 
 
 function project(x) {
@@ -194,11 +206,11 @@ var svg = d3.select(map.getPanes().overlayPane).append("svg")
 var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
 var data = {};
-var income = 6;
+var income = 5;
   
 var bounds, projbounds;
 var defbounds = [[-124.475,42.223],[-114.604,32.04]];
-var boundsd = {"newyork": [[-75.2,42.05],[-72.0,39.57]]}
+var boundsd = {"newyork": [[-75.2,42.05],[-72.0,39.57]],"mexicocity":[[-99.517,19.792],[-98.66,19.079]]}
 function setbounds(region) {
   if(region in boundsd) bounds = boundsd[region];
   else bounds = defbounds;
@@ -231,13 +243,19 @@ var agechart = nv.models.discreteBarChart()
   .transitionDuration(1000);
 
 function readcsv(region,income) {
-  
   g.selectAll("circle").data([]).exit().remove(); // remove old circles
   data = {};  
 
   var fname;
   if(region == "newyork") fname = region+"/minibats"+income+".csv";
   else fname = "batsdata/"+region+"/minibats"+income+".csv";
+
+  if(segment != null) {
+    if(region == "newyork") fname = region+"/"+segment+".csv";
+    else fname = "batsdata/"+region+"/"+segment+".csv";
+    segment = null; 
+  }
+
   d3.csv(fname, function(d) {
     return {
       hhid:  +d.HHID,
