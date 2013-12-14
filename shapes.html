@@ -38,7 +38,7 @@
 
     var data = null;
     
-    if(document.URL.indexOf('?') == -1) var file = "bayarea_chts_worktractvolume";
+    if(document.URL.indexOf('?') == -1) var file = "bayarea_chts_tractvolume";
     else var file = document.URL.match(/file=([^&]+)/)[1];
     
     d3.csv("data/"+file+".csv", function(d) {

@@ -29,3 +29,25 @@ Note that I name the files with the income category in the file name in order to
 _Really, if you get the data formatted, I will add the region to the current set of regions._
 
 ![losangeles](https://raw.github.com/fscottfoti/batsmaps/master/images/losangeles.jpg)
+
+============================
+
+shapes.html is used to visualize the travel surveys as aggregate shapes - for the Bay Area this uses census tracts.
+
+This map allows you to hover over the home tract and see the distribution of tracts (sum of trips) visited by people in that tract.
+
+http://WEBROOT/activemaps/shapes.html
+
+This map allows you to hover over the work tract and see the distribution of tracts (sum of people) that work in that tract.
+
+http://WEBROOT/activemaps/shapes.html?file=bayarea_chts_worktractvolume
+
+The following two links do the same thing for "superdistrict" geography instead of tracts:
+
+http://localhost:63342/activemaps/shapes_sd.html
+http://localhost:63342/activemaps/shapes_sd.html?file=bayarea_chts_worktractvolume
+
+This link allows you to see a custom created segment in activemaps (in this case the segment is the city of Ecatapec in Mexico city).
+
+http://WEBROOT/activemaps/index.html?region=mexicocity&segment=ecatepec
+
