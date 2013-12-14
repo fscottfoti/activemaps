@@ -32,20 +32,20 @@ _Really, if you get the data formatted, I will add the region to the current set
 
 ============================
 
-shapes.html is used to visualize the travel surveys as aggregate shapes - for the Bay Area this uses census tracts.
+hovermaps.html is used to visualize the travel surveys as aggregate hovermaps - for the Bay Area this uses census tracts.
 
 This map allows you to hover over the home tract and see the distribution of tracts (sum of trips) visited by people in that tract.
 
-http://WEBROOT/activemaps/shapes.html
+http://WEBROOT/activemaps/hovermaps.html
 
 This map allows you to hover over the work tract and see the distribution of tracts (sum of people) that work in that tract.
 
-http://WEBROOT/activemaps/shapes.html?file=bayarea_chts_worktractvolume
+http://WEBROOT/activemaps/hovermaps.html?file=bayarea_chts_worktractvolume
 
 The following two links do the same thing for "superdistrict" geography instead of tracts:
 
-http://localhost:63342/activemaps/shapes_sd.html
-http://localhost:63342/activemaps/shapes_sd.html?file=bayarea_chts_worktractvolume
+http://localhost:63342/activemaps/hovermaps_sd.html
+http://localhost:63342/activemaps/hovermaps_sd.html?file=bayarea_chts_worktractvolume
 
 This link allows you to see a custom created segment in activemaps (in this case the segment is the city of Ecatapec in Mexico city).
 
