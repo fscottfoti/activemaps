@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+
+    <link rel="stylesheet" href="//leafletjs.com/dist/leaflet.css"/>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="//leafletjs.com/dist/leaflet.js"></script>
+    <script src="js/TileLayer.GeoJSON.js"></script>
+    <script src="js/d3.v3.js"></script>
+
+    <style type="text/css">
+        html, body, #map {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div id="map"></div>
+
+<script type="text/javascript">
+    var map = new L.Map('map'),
+            cloudmadeUrl = 'http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/997/256/{z}/{x}/{y}.png',
+            cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
+
+    map.setView(new L.LatLng(37.7792, -122.3391), 12);
+
+    var baseLayer = new L.TileLayer(cloudmadeUrl, { attribution: cloudmadeAttribution});
+    map.addLayer(baseLayer);
+
+    var data = null;
+
+    if (document.URL.indexOf('?') == -1) var file = "tract_income_entropy";
+    else var file = document.URL.match(/file=([^&]+)/)[1];
+
+    d3.csv("data/" + file + ".csv",
+            function (error, rows) {
+                var d = {};
+                rows.forEach(function (r) {
+                    d[r.tract_id] = r;
+                });
+                data = d;
+
+                var defstyle = {
+                    "clickable": true,
+                    "color": "#00D",
+                    "fillColor": "#00D",
+                    "weight": 1.0,
+                    "opacity": 0.3,
+                    "fillOpacity": 0.1
+                }
+
+                function style(feature) {
+                    if (feature === undefined || feature.properties.water > 0 || data === null || !(feature.id in data) || data[feature.id].entropy < .01) {
+                        defstyle["fillOpacity"] = 0.0;
+                        return defstyle;
+                    }
+                    defstyle["fillOpacity"] = 1-data[feature.id].entropy;
+
+                    return defstyle;
+                }
+
+                var tblname = 'bayarea';
+                var geojsonURL = 'http://paris.urbansim.org:8763/' + tblname + '/{z}/{x}/{y}.geojson';
+                var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
+                            clipTiles: false,
+                            unique: function (feature) {
+                                return feature.id;
+                            }
+                        }, {
+                            style: style,
+                            onEachFeature: function (feature, layer) {
+
+                                if (feature.properties) {
+                                    var popupString = '<div class="popup">';
+                                    for (var k in feature.properties) {
+                                        //if(k == "water") continue;
+                                        var v = feature.properties[k];
+                                        popupString += k + ': ' + v + '<br />';
+                                    }
+                                    for (var k in data[feature.id]) {
+                                        if(k == "tract_id") continue;
+                                        popupString += k + ': ' + parseFloat(data[feature.id][k]).toFixed(2) + '<br />';
+                                    }
+                                    popupString += '</div>';
+                                    layer.bindPopup(popupString);
+                                }
+                                if (!(layer instanceof L.Point)) {
+                                    layer.on('mouseover', function () {
+                                        geojsonTileLayer.geojsonLayer.setStyle(style);
+                                    });
+                                }
+                            }
+                        }
+                );
+                map.addLayer(geojsonTileLayer);
+            });
+</script>
+</body>
+</html>
