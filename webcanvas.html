@@ -5,10 +5,12 @@
     <title></title>
 
     <link rel="stylesheet" href="//leafletjs.com/dist/leaflet.css"/>
+    <link rel="stylesheet" href="js/colorbrewer.css"/>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="//leafletjs.com/dist/leaflet.js"></script>
     <script src="js/TileLayer.GeoJSON.js"></script>
-    <script src="js/d3.v3.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="js/colorbrewer.js"></script>
 
     <style type="text/css">
         html, body, #map {
@@ -33,6 +35,7 @@
     var baseLayer = new L.TileLayer(cloudmadeUrl, { attribution: cloudmadeAttribution});
     map.addLayer(baseLayer);
 
+    var val = function (r){return 1-r["entropy"]};
     var data = null;
 
     if (document.URL.indexOf('?') == -1) var file = "tract_income_entropy";
@@ -41,9 +44,12 @@
     d3.csv("data/" + file + ".csv",
             function (error, rows) {
                 var d = {};
+                var vals = [];
                 rows.forEach(function (r) {
                     d[r.tract_id] = r;
+                    vals.push(val(r));
                 });
+                set_color_scale(false,"Blues",7,vals);
                 data = d;
 
                 var defstyle = {
@@ -56,11 +62,16 @@
                 }
 
                 function style(feature) {
-                    if (feature === undefined || feature.properties.water > 0 || data === null || !(feature.id in data) || data[feature.id].entropy < .01) {
+                    if(feature === undefined) {
+                        geojsonTileLayer.geojsonLayer.setStyle(style); // weird hack to recolor on 2nd half of a shape crossing a tile boundary
+                    }
+                    var pctwater = function(feature) {return feature.properties.water/(feature.properties.water+feature.properties.land);}
+                    if (feature === undefined || pctwater(feature) > .3 || data === null || !(feature.id in data)) {
                         defstyle["fillOpacity"] = 0.0;
                         return defstyle;
                     }
-                    defstyle["fillOpacity"] = 1-data[feature.id].entropy;
+                    defstyle["fillOpacity"] = val(data[feature.id]);
+                    defstyle["fillColor"] = get_color(val(data[feature.id]));
 
                     return defstyle;
                 }
@@ -68,7 +79,7 @@
                 var tblname = 'bayarea';
                 var geojsonURL = 'http://paris.urbansim.org:8763/' + tblname + '/{z}/{x}/{y}.geojson';
                 var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
-                            clipTiles: false,
+                            clipTiles: true,
                             unique: function (feature) {
                                 return feature.id;
                             }
@@ -99,6 +110,7 @@
                         }
                 );
                 map.addLayer(geojsonTileLayer);
+                add_legend(map);
             });
 </script>
 </body>
