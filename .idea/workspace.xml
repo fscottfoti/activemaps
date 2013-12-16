@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c5983047-7f91-4eeb-90e7-c671a786fc92" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/js/colorbrewer.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webcanvas.html" afterPath="$PROJECT_DIR$/webcanvas.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/mexcity_tractvolume.csv" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/hovermaps.html" afterPath="$PROJECT_DIR$/hovermaps.html" />
     </list>
     <ignored path="activemaps.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,28 +26,7 @@
     <favorites_list name="activemaps" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="webcanvas.html" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/webcanvas.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="73" column="20" selection-start="2756" selection-end="2756" vertical-scroll-proportion="0.7933884" vertical-offset="615" max-vertical-offset="1845">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="colorbrewer.js" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/js/colorbrewer.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="13" column="9" selection-start="407" selection-end="407" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5340">
-              <folding>
-                <marker date="1387100849000" expanded="true" signature="1130:1141" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -67,19 +47,20 @@
         <option value="$PROJECT_DIR$/shapes.html" />
         <option value="$PROJECT_DIR$/js/activemaps.css" />
         <option value="$PROJECT_DIR$/index.html" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/js/activemaps_config.js" />
         <option value="$PROJECT_DIR$/js/activemaps.js" />
         <option value="$PROJECT_DIR$/indicatormap.html" />
         <option value="$PROJECT_DIR$/js/colorbrewer.js" />
         <option value="$PROJECT_DIR$/webcanvas.html" />
+        <option value="$PROJECT_DIR$/hovermaps.html" />
+        <option value="$PROJECT_DIR$/README.md" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="85" />
+    <option name="x" value="230" />
     <option name="y" value="22" />
-    <option name="width" value="1129" />
+    <option name="width" value="956" />
     <option name="height" value="790" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -108,6 +89,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -126,31 +108,16 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="activemaps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="activemaps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="js" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="options.lastSelected" value="appearance" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -158,6 +125,14 @@
     </key>
   </component>
   <component name="RunManager">
+    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
+      <option name="VMOptions" />
+      <option name="arguments" />
+      <option name="filePath" />
+      <option name="scope" value="ALL" />
+      <option name="testName" />
+      <method />
+    </configuration>
     <configuration default="true" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -168,23 +143,15 @@
       <option name="showConsoleOnStdOut" value="false" />
       <method />
     </configuration>
-    <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
-      <option name="VMOptions" />
-      <option name="arguments" />
-      <option name="filePath" />
-      <option name="scope" value="ALL" />
-      <option name="testName" />
-      <method />
-    </configuration>
-    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
-      <envs />
-      <method />
-    </configuration>
     <configuration default="true" type="JSTestDriver:ConfigurationType" factoryName="JsTestDriver">
       <setting name="configLocationType" value="CONFIG_FILE" />
       <setting name="settingsFile" value="" />
       <setting name="serverType" value="INTERNAL" />
       <setting name="preferredDebugBrowser" value="CHROME" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerKarma" factoryName="Karma" singleton="true" config-file="">
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug" singleton="true">
@@ -206,14 +173,14 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="85" y="22" width="1129" height="790" extended-state="0" />
-    <editor active="true" />
+    <frame x="230" y="22" width="956" height="790" extended-state="0" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24712135" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.291841" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -241,38 +208,25 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/webcanvas.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="20" selection-start="2756" selection-end="2756" vertical-scroll-proportion="0.0" vertical-offset="615" max-vertical-offset="1845">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/colorbrewer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="9" selection-start="407" selection-end="407" vertical-scroll-proportion="0.0" vertical-offset="195" max-vertical-offset="5340">
+          <folding>
+            <marker date="1387100849000" expanded="false" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/js/activemaps.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="25" column="20" selection-start="507" selection-end="507" vertical-scroll-proportion="0.5622189" vertical-offset="0" max-vertical-offset="667" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="5" selection-start="2997" selection-end="2997" vertical-scroll-proportion="0.14285715" vertical-offset="675" max-vertical-offset="1320" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/activemaps.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="92" column="14" selection-start="2895" selection-end="2895" vertical-scroll-proportion="2.1939588" vertical-offset="0" max-vertical-offset="4185">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/activemaps_config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="16" selection-start="598" selection-end="598" vertical-scroll-proportion="0.20642202" vertical-offset="0" max-vertical-offset="705" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="0" selection-start="3168" selection-end="3168" vertical-scroll-proportion="0.8853211" vertical-offset="171" max-vertical-offset="885" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/hovermaps_df.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="19" selection-start="585" selection-end="585" vertical-scroll-proportion="0.14285715" vertical-offset="180" max-vertical-offset="1950">
-          <folding />
-        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bat.ico">
@@ -280,9 +234,16 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hovermaps.html">
+    <entry file="file://$PROJECT_DIR$/webcanvas.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="102" column="68" selection-start="3492" selection-end="3538" vertical-scroll-proportion="0.61904764" vertical-offset="1140" max-vertical-offset="1770">
+        <state line="53" column="0" selection-start="1757" selection-end="1757" vertical-scroll-proportion="0.2857143" vertical-offset="615" max-vertical-offset="1845">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/activemaps_config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="297" selection-start="520" selection-end="537" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="735">
           <folding />
         </state>
       </provider>
@@ -291,14 +252,44 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="9" selection-start="407" selection-end="407" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5340">
           <folding>
-            <marker date="1387100849000" expanded="true" signature="1130:1141" placeholder="..." />
+            <marker date="1387100849000" expanded="false" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/webcanvas.html">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="20" selection-start="2756" selection-end="2756" vertical-scroll-proportion="0.7933884" vertical-offset="615" max-vertical-offset="1845">
+        <state line="10" column="7" selection-start="367" selection-end="367" vertical-scroll-proportion="-6.25" vertical-offset="0" max-vertical-offset="1320">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/activemaps.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="80" column="0" selection-start="2550" selection-end="2550" vertical-scroll-proportion="-10.76" vertical-offset="931" max-vertical-offset="4185">
+          <folding>
+            <marker date="1387052166000" expanded="false" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hovermaps_df.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="31" column="112" selection-start="983" selection-end="983" vertical-scroll-proportion="-11.875" vertical-offset="180" max-vertical-offset="1950">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="0" selection-start="2821" selection-end="2821" vertical-scroll-proportion="0.64342314" vertical-offset="254" max-vertical-offset="945">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hovermaps.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="44" selection-start="1085" selection-end="1085" vertical-scroll-proportion="0.23809524" vertical-offset="375" max-vertical-offset="1890">
           <folding />
         </state>
       </provider>

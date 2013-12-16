@@ -42,6 +42,10 @@ This map allows you to hover over the work tract and see the distribution of tra
 
 http://WEBROOT/activemaps/hovermaps.html?file=bayarea_chts_worktractvolume
 
+This map does the same as the first map but for the Mexico City region and survey.  It's a bit slugging because there are 4x more tracts in Mexico City than the Bay Area.
+
+http://localhost:63343/activemaps/hovermaps.html?region=mexicocity&file=mexcity_tractvolume
+
 The following two links do the same thing for "superdistrict" geography instead of tracts:
 
 http://localhost:63342/activemaps/hovermaps_sd.html

@@ -12,8 +12,8 @@
     <script src="//leafletjs.com/dist/leaflet.js"></script>
     <script src="js/TileLayer.GeoJSON.js"></script>
     <script src="js/d3.v3.js"></script>
-
-    <style type="text/css">
+    <script src="js/activemaps_config.js"></script>
+    <style>
     html, body, #map {
         margin: 0;
         padding: 0;
@@ -27,19 +27,27 @@
     <div id="map"></div>
 
     <script type="text/javascript">
+    var region = "bayarea";
+    var file = "bayarea_chts_tractvolume";
+    if(document.URL.indexOf('?') != -1) {
+      var tmpregion = document.URL.match(/region=([^&]+)/);
+      if(tmpregion != null) region = tmpregion[1];
+      var tmpfile = document.URL.match(/file=([^&]+)/);
+      if(tmpfile != null) file = tmpfile[1] ;
+    }
+    console.log(region);
+    var centerd = REGIONCENTERS;
+    var center = centerd[region];
+    console.log(file);
     var map = new L.Map('map'),
         cloudmadeUrl = 'http://{s}.tile.cloudmade.com/1a1b06b230af4efdbb989ea99e9841af/997/256/{z}/{x}/{y}.png',
         cloudmadeAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 CloudMade';
-    
-    map.setView(new L.LatLng(37.7792,-122.3391), 12);
 
+    map.setView(new L.LatLng(center[0],center[1]), 12);
     var baseLayer = new L.TileLayer(cloudmadeUrl, { attribution: cloudmadeAttribution});
     map.addLayer(baseLayer);
 
     var data = null;
-    
-    if(document.URL.indexOf('?') == -1) var file = "bayarea_chts_tractvolume";
-    else var file = document.URL.match(/file=([^&]+)/)[1];
     
     d3.csv("data/"+file+".csv", function(d) {
       return {
@@ -78,7 +86,7 @@
       return defstyle;
     }
 
-    var tblname = 'bayarea';
+    var tblname = {'bayarea':'bayarea','mexicocity':'mexcity'}[region];
     var geojsonURL = 'http://paris.urbansim.org:8763/'+tblname+'/{z}/{x}/{y}.geojson';
     var geojsonTileLayer = new L.TileLayer.GeoJSON(geojsonURL, {
             clipTiles: true,
